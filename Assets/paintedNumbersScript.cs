@@ -456,4 +456,31 @@ public class paintedNumbersScript : MonoBehaviour
         }
         givenAnswer++;
     }
+
+    #pragma warning disable 414
+        private string TwitchHelpMessage = @"Use !{0} spray 1 2 5 6 8 to press the numbers POSITION in the order. (Reading order)";
+    #pragma warning restore 414
+
+    IEnumerator ProcessTwitchCommand(string command)
+    {
+        Debug.Log(command);
+        var parts = command.ToLowerInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length > 0 && parts[0] == "spray" && parts.Skip(1).All(part => part.Length == 1 && "123456789".Contains(part)))
+        {
+            yield return null;
+
+            var cmdNumbers = parts.Skip(1).ToArray();
+
+            for (int i = 0; i < cmdNumbers.Length; i++)
+            {
+                int num;
+                int.TryParse(cmdNumbers[i], out num);
+
+                numberPress(numbers[num - 1]);
+
+                yield return new WaitForSeconds(.2f);
+            }
+        }
+    }
 }
