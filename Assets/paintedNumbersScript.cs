@@ -124,7 +124,7 @@ public class paintedNumbersScript : MonoBehaviour
     {
         if (colorCount[0] > colorCount[1])
         {
-            Debug.LogFormat("[Graffiti Numbers #{0}] Start at rule 9 and work backwards.", moduleId);
+            Debug.LogFormat("[Graffiti Numbers #{0}] Start at rule 8 and work backwards.", moduleId);
             backwards = true;
             Rule8();
         }
