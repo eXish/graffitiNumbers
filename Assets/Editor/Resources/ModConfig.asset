@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: graffitiNumbers
   title: Graffiti Numbers
-  description: 'Graffiti Numbers 1.11
+  description: 'Graffiti Numbers 1.2
 
     The answer to this puzzle is spray painted on the wall. Hurry up and punch it
     in!
@@ -28,6 +28,6 @@ MonoBehaviour:
 
 
     Manual available here: https://ktane.timwi.de/HTML/Graffiti%20Numbers.html'
-  version: 1.11
+  version: 1.2
   outputFolder: build
   previewImage: {fileID: 2800000, guid: ebe7de1cabdcc461482500ab4dc0e581, type: 3}

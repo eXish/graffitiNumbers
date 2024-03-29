@@ -9,6 +9,7 @@ public class paintedNumbersScript : MonoBehaviour
 {
     public KMBombInfo Bomb;
     public KMAudio Audio;
+    public KMColorblindMode Colorblind;
     public KMSelectable[] numbers;
     public GameObject[] numbersRend;
     public TextMesh[] numbersText;
@@ -31,6 +32,7 @@ public class paintedNumbersScript : MonoBehaviour
     private int buttonPresses = 0;
     private int correctAnswerLength = 0;
     private int givenAnswer = 0;
+    private bool cbEnabled;
 
     //Rules
     private int rulesCounted = 0;
@@ -83,11 +85,14 @@ public class paintedNumbersScript : MonoBehaviour
         {
             KMSelectable trueNumber = number;
             number.OnInteract += delegate () { numberPress(trueNumber); return false; };
+            number.OnSelect += delegate () { numberHighlight(trueNumber); };
+            number.OnDeselect += delegate () { numberUnhighlight(trueNumber); };
         }
     }
 
     void Start()
     {
+        cbEnabled = Colorblind.ColorblindModeActive;
         foreach (Renderer burst in bursts)
         {
             burst.enabled = false;
@@ -457,9 +462,29 @@ public class paintedNumbersScript : MonoBehaviour
         givenAnswer++;
     }
 
-    #pragma warning disable 414
-        private string TwitchHelpMessage = @"Use !{0} spray 1 2 5 6 8 to press the numbers POSITION in the order. (Reading order)";
-    #pragma warning restore 414
+    void numberHighlight(KMSelectable number)
+    {
+        int index = Array.IndexOf(numbers, number);
+        if (cbEnabled)
+        {
+            numbersText[index].text = colorNames[selectedColors[index]].ToUpper()[0].ToString();
+            numbersRend[index].transform.localPosition = new Vector3(0, 0, 0.001f);
+        }
+    }
+
+    void numberUnhighlight(KMSelectable number)
+    {
+        int index = Array.IndexOf(numbers, number);
+        if (cbEnabled)
+        {
+            numbersText[index].text = selectedNumbers[index].ToString();
+            numbersRend[index].transform.localPosition = new Vector3(0, 0, 0.101f);
+        }
+    }
+
+#pragma warning disable 414
+    private string TwitchHelpMessage = @"Use !{0} spray 1 2 5 6 8 to press the numbers POSITION in the order (Reading order). Use !{0} colorblind to cycle the colors of the numbers.";
+#pragma warning restore 414
 
     IEnumerator ProcessTwitchCommand(string command)
     {
@@ -481,6 +506,22 @@ public class paintedNumbersScript : MonoBehaviour
 
                 yield return new WaitForSeconds(.2f);
             }
+        }
+        else if (parts.Length == 1 && parts[0] == "colorblind")
+        {
+            yield return null;
+
+            bool wasCBEnabled = cbEnabled;
+            if (!wasCBEnabled)
+                cbEnabled = true;
+            for (int i = 0; i < 9; i++)
+            {
+                numberHighlight(numbers[i]);
+                yield return new WaitForSeconds(1f);
+                numberUnhighlight(numbers[i]);
+            }
+            if (!wasCBEnabled)
+                cbEnabled = false;
         }
     }
 }
