@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using paintedNumbers;
 
 public class paintedNumbersScript : MonoBehaviour
 {
@@ -85,8 +84,8 @@ public class paintedNumbersScript : MonoBehaviour
         {
             KMSelectable trueNumber = number;
             number.OnInteract += delegate () { numberPress(trueNumber); return false; };
-            number.OnSelect += delegate () { numberHighlight(trueNumber); };
-            number.OnDeselect += delegate () { numberUnhighlight(trueNumber); };
+            number.OnHighlight += delegate () { numberHighlight(trueNumber); };
+            number.OnHighlightEnded += delegate () { numberUnhighlight(trueNumber); };
         }
     }
 
